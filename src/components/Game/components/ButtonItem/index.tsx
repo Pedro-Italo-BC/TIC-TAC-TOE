@@ -2,18 +2,20 @@ import { Button } from './styles'
 import circle from '../../../../assets/PlayersElement/Circle.svg'
 import x from '../../../../assets/PlayersElement/X.svg'
 
-import { Players } from '../..'
+import { PlayersType } from '../..'
 
 interface ButtonItemProps {
   index: number
   handleAttributeItemValue: (index: number) => void
-  itemsValue: Players[]
+  itemsValue: PlayersType[]
+  blockedAction: boolean
 }
 
 export function ButtonItem({
   handleAttributeItemValue,
   index,
   itemsValue,
+  blockedAction,
 }: ButtonItemProps) {
   const pictureFunction = () => {
     if (itemsValue[index] === 'x') {
@@ -37,7 +39,7 @@ export function ButtonItem({
     }
   }
   return (
-    <Button onClick={handleClickButton}>
+    <Button onClick={handleClickButton} disabled={blockedAction}>
       <img src={picture} alt="" draggable={'false'} />
     </Button>
   )

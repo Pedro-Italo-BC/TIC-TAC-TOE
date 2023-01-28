@@ -1,5 +1,10 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { Players, WinnerType } from '../..'
+import {
+  PlayersType,
+  PlayersQuantityType,
+  WinnerType,
+  PlayersObjType,
+} from '../..'
 import {
   GameContent,
   GameArea,
@@ -10,11 +15,16 @@ import {
 } from './styles'
 
 import { ButtonItem } from '../ButtonItem'
+import { singlePlayer } from '../../../../utils/SinglePlayer'
 
 interface TicTacToeGameProps {
-  currentTurn: Players
-  setCurrentTurn: Dispatch<SetStateAction<Players>>
+  currentTurn: PlayersType
+  setCurrentTurn: Dispatch<SetStateAction<PlayersType>>
   setWinner: Dispatch<SetStateAction<WinnerType>>
+  setPlayersQuantity: Dispatch<SetStateAction<PlayersQuantityType>>
+  playersQuantity: PlayersQuantityType
+  players: PlayersObjType
+  setPlayers: Dispatch<SetStateAction<PlayersObjType>>
 }
 
 interface CheckedValueAmountData {
@@ -26,8 +36,12 @@ export function TicTacToeGame({
   currentTurn,
   setCurrentTurn,
   setWinner,
+  setPlayersQuantity,
+  playersQuantity,
+  players,
+  setPlayers,
 }: TicTacToeGameProps) {
-  const [itemsValue, setItemsValue] = useState<Players[]>([
+  const [itemsValue, setItemsValue] = useState<PlayersType[]>([
     null,
     null,
     null,
@@ -39,11 +53,18 @@ export function TicTacToeGame({
     null,
   ])
 
-  console.log(itemsValue)
+  const [blockedAction, setBlockedAction] = useState(false)
 
   function onWinTheGame(value: WinnerType) {
-    setCurrentTurn(null)
-    setWinner(value)
+    setTimeout(() => {
+      setCurrentTurn(null)
+      setPlayersQuantity(null)
+      setPlayers({
+        firstPlayer: null,
+        secondPlayer: null,
+      })
+      setWinner(value)
+    }, 1000)
   }
 
   function winCases() {
@@ -81,7 +102,6 @@ export function TicTacToeGame({
         circle: [],
       },
     )
-    console.log(checkedValueAmount)
 
     const hasCirclesWon = winningPossibilities
       .reduce<boolean[]>((acc, cur) => {
@@ -126,9 +146,29 @@ export function TicTacToeGame({
     } else {
       setCurrentTurn('circle')
     }
-
-    winCases()
   }
+
+  function botAction() {
+    singlePlayer(
+      itemsValue,
+      setItemsValue,
+      currentTurn,
+      setCurrentTurn,
+      players.secondPlayer,
+      setBlockedAction,
+    )
+
+    if (players.secondPlayer === currentTurn) {
+      setBlockedAction(true)
+    }
+  }
+
+  useEffect(() => {
+    if (playersQuantity === 'singlePlayer') {
+      botAction()
+    }
+    winCases()
+  }, [currentTurn])
 
   return (
     <GameContainer>
@@ -141,6 +181,7 @@ export function TicTacToeGame({
             <tr>
               <GameButtonItem>
                 <ButtonItem
+                  blockedAction={blockedAction}
                   itemsValue={itemsValue}
                   handleAttributeItemValue={handleAttributeItemValue}
                   index={0}
@@ -148,6 +189,7 @@ export function TicTacToeGame({
               </GameButtonItem>
               <GameButtonItem>
                 <ButtonItem
+                  blockedAction={blockedAction}
                   itemsValue={itemsValue}
                   handleAttributeItemValue={handleAttributeItemValue}
                   index={1}
@@ -155,6 +197,7 @@ export function TicTacToeGame({
               </GameButtonItem>
               <GameButtonItem>
                 <ButtonItem
+                  blockedAction={blockedAction}
                   itemsValue={itemsValue}
                   handleAttributeItemValue={handleAttributeItemValue}
                   index={2}
@@ -164,6 +207,7 @@ export function TicTacToeGame({
             <tr>
               <GameButtonItem>
                 <ButtonItem
+                  blockedAction={blockedAction}
                   itemsValue={itemsValue}
                   handleAttributeItemValue={handleAttributeItemValue}
                   index={3}
@@ -171,6 +215,7 @@ export function TicTacToeGame({
               </GameButtonItem>
               <GameButtonItem>
                 <ButtonItem
+                  blockedAction={blockedAction}
                   itemsValue={itemsValue}
                   handleAttributeItemValue={handleAttributeItemValue}
                   index={4}
@@ -178,6 +223,7 @@ export function TicTacToeGame({
               </GameButtonItem>
               <GameButtonItem>
                 <ButtonItem
+                  blockedAction={blockedAction}
                   itemsValue={itemsValue}
                   handleAttributeItemValue={handleAttributeItemValue}
                   index={5}
@@ -187,6 +233,7 @@ export function TicTacToeGame({
             <tr>
               <GameButtonItem>
                 <ButtonItem
+                  blockedAction={blockedAction}
                   itemsValue={itemsValue}
                   handleAttributeItemValue={handleAttributeItemValue}
                   index={6}
@@ -194,6 +241,7 @@ export function TicTacToeGame({
               </GameButtonItem>
               <GameButtonItem>
                 <ButtonItem
+                  blockedAction={blockedAction}
                   itemsValue={itemsValue}
                   handleAttributeItemValue={handleAttributeItemValue}
                   index={7}
@@ -201,6 +249,7 @@ export function TicTacToeGame({
               </GameButtonItem>
               <GameButtonItem>
                 <ButtonItem
+                  blockedAction={blockedAction}
                   itemsValue={itemsValue}
                   handleAttributeItemValue={handleAttributeItemValue}
                   index={8}
