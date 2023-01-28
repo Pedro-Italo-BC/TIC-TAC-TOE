@@ -27,8 +27,6 @@ export const Button = styled.button`
 
   padding: 10px;
 
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
-
   box-shadow: 4px 4px 14px rgba(0, 0, 0, 0.15);
 
   &:hover {

@@ -86,6 +86,6 @@ export const GameArea = styled.table`
 `
 
 export const GameButtonItem = styled.td`
-  width: 5.8rem;
-  height: 5.8rem;
+  width: 5.625rem;
+  height: 5.625rem;
 `

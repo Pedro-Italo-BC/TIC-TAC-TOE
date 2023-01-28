@@ -13,7 +13,7 @@ export function Game() {
 
   const [winner, setWinner] = useState<WinnerType>(null)
 
-  function something() {
+  function pagesSelector() {
     if (currentTurn && !winner) {
       return (
         <TicTacToeGame
@@ -29,5 +29,5 @@ export function Game() {
     }
   }
 
-  return <GameContainer>{something()}</GameContainer>
+  return <GameContainer>{pagesSelector()}</GameContainer>
 }

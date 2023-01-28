@@ -11,18 +11,13 @@ import {
 
 import { ButtonItem } from '../ButtonItem'
 
-export interface ItemsValueData {
-  index: number
-  type: Players
-}
-
 interface TicTacToeGameProps {
   currentTurn: Players
   setCurrentTurn: Dispatch<SetStateAction<Players>>
   setWinner: Dispatch<SetStateAction<WinnerType>>
 }
 
-interface TimesValueAmountData {
+interface CheckedValueAmountData {
   x: number[]
   circle: number[]
 }
@@ -32,7 +27,19 @@ export function TicTacToeGame({
   setCurrentTurn,
   setWinner,
 }: TicTacToeGameProps) {
-  const [itemsValue, setItemsValue] = useState<ItemsValueData[]>([])
+  const [itemsValue, setItemsValue] = useState<Players[]>([
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ])
+
+  console.log(itemsValue)
 
   function onWinTheGame(value: WinnerType) {
     setCurrentTurn(null)
@@ -53,16 +60,16 @@ export function TicTacToeGame({
       [2, 5, 8],
     ]
 
-    const timesValueAmount = itemsValue.reduce<TimesValueAmountData>(
-      (acc, cur) => {
-        if (cur.type === 'circle') {
+    const checkedValueAmount = itemsValue.reduce<CheckedValueAmountData>(
+      (acc, cur, index) => {
+        if (cur === 'circle') {
           return {
             x: [...acc.x],
-            circle: [...acc.circle, cur.index],
+            circle: [...acc.circle, index],
           }
-        } else if (cur.type === 'x') {
+        } else if (cur === 'x') {
           return {
-            x: [...acc.x, cur.index],
+            x: [...acc.x, index],
             circle: [...acc.circle],
           }
         }
@@ -74,11 +81,12 @@ export function TicTacToeGame({
         circle: [],
       },
     )
+    console.log(checkedValueAmount)
 
     const hasCirclesWon = winningPossibilities
       .reduce<boolean[]>((acc, cur) => {
         const currentContentValuesVerification = cur.every((item) => {
-          return timesValueAmount.circle.indexOf(item) !== -1
+          return checkedValueAmount.circle.indexOf(item) !== -1
         })
 
         return [...acc, currentContentValuesVerification]
@@ -88,7 +96,7 @@ export function TicTacToeGame({
     const hasXWon = winningPossibilities
       .reduce<boolean[]>((acc, cur) => {
         const currentContentValuesVerification = cur.every((item) => {
-          return timesValueAmount.x.indexOf(item) !== -1
+          return checkedValueAmount.x.indexOf(item) !== -1
         })
 
         return [...acc, currentContentValuesVerification]
@@ -99,22 +107,27 @@ export function TicTacToeGame({
       onWinTheGame('circle')
     } else if (hasXWon) {
       onWinTheGame('x')
-    } else if (itemsValue.length >= 9) {
+    } else if (
+      itemsValue.length >= 9 &&
+      itemsValue.every((value) => value != null)
+    ) {
       onWinTheGame('draw')
     }
   }
 
-  useEffect(() => {
-    winCases()
-  }, [itemsValue])
-
   function handleAttributeItemValue(index: number) {
-    setItemsValue((state) => [...state, { index, type: currentTurn }])
+    const checkeds = itemsValue
+
+    checkeds[index] = currentTurn
+
+    setItemsValue(checkeds)
     if (currentTurn === 'circle') {
       setCurrentTurn('x')
     } else {
       setCurrentTurn('circle')
     }
+
+    winCases()
   }
 
   return (
