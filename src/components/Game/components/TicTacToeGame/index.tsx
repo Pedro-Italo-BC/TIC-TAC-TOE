@@ -56,15 +56,13 @@ export function TicTacToeGame({
   const [blockedAction, setBlockedAction] = useState(false)
 
   function onWinTheGame(value: WinnerType) {
-    setTimeout(() => {
-      setCurrentTurn(null)
-      setPlayersQuantity(null)
-      setPlayers({
-        firstPlayer: null,
-        secondPlayer: null,
-      })
-      setWinner(value)
-    }, 1000)
+    setCurrentTurn(null)
+    setPlayersQuantity(null)
+    setPlayers({
+      firstPlayer: null,
+      secondPlayer: null,
+    })
+    setWinner(value)
   }
 
   function winCases() {
@@ -124,14 +122,29 @@ export function TicTacToeGame({
       .includes(true)
 
     if (hasCirclesWon) {
-      onWinTheGame('circle')
+      setBlockedAction(true)
+      setTimeout(() => {
+        onWinTheGame('circle')
+        setBlockedAction(false)
+        setBlockedAction(false)
+      }, 1000)
     } else if (hasXWon) {
-      onWinTheGame('x')
+      setBlockedAction(true)
+      setTimeout(() => {
+        onWinTheGame('x')
+        setBlockedAction(false)
+        setBlockedAction(false)
+      }, 1000)
     } else if (
       itemsValue.length >= 9 &&
       itemsValue.every((value) => value != null)
     ) {
-      onWinTheGame('draw')
+      setBlockedAction(true)
+      setTimeout(() => {
+        onWinTheGame('draw')
+        setBlockedAction(false)
+        setBlockedAction(false)
+      }, 1000)
     }
   }
 
